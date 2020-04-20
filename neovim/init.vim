@@ -11,6 +11,8 @@ Plug 'tpope/vim-commentary'
 Plug 'joukevandermaas/vim-ember-hbs'
 Plug 'pangloss/vim-javascript'
 Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'fatih/vim-go'
+Plug 'tpope/vim-repeat'
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -44,10 +46,6 @@ set rtp+=/usr/local/opt/fzf
 set autoread
 set relativenumber
 set numberwidth=3
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
 set spellsuggest=15
 set linebreak
@@ -128,13 +126,19 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" Move lines up and down
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-inoremap <A-j> <Esc>:m .+1<CR>==gi
-inoremap <A-k> <Esc>:m .-2<CR>==gi
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
+" Easier Buffer navigation
+nmap ; :Buffers<CR>
+
+" Move between open buffers.
+nmap <C-k> :bnext<CR>
+nmap <C-j> :bprev<CR>
+
+" Use the space key to toggle folds
+nnoremap <space> za
+vnoremap <space> zf
+
+" Marks should go to the column, not just the line. Why isn't this the default?
+nnoremap ' `
 
 " Add diagnostic info for https://github.com/itchyny/lightline.vim
 let g:lightline = {
@@ -223,3 +227,4 @@ endfunction
 " }}}
 
 let &winwidth = &columns * 7 / 10
+
