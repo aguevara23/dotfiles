@@ -8,11 +8,39 @@ Plug 'bilalq/lite-dfm'
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'joukevandermaas/vim-ember-hbs'
-Plug 'pangloss/vim-javascript'
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'fatih/vim-go'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-fugitive'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'w0rp/ale'                           " Linter
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kshenoy/vim-signature'
+
+" Language Support {{{3
+" JavaScript {{{4
+Plug 'pangloss/vim-javascript'
+Plug 'joukevandermaas/vim-ember-hbs'
+Plug 'mxw/vim-jsx'
+Plug 'neovim/node-host', { 'do': 'npm install' }
+
+" TypeScript {{{4
+Plug 'HerringtonDarkholme/yats.vim'
+
+" HTML {{{4
+Plug 'othree/html5.vim'
+
+" CSS {{{4
+Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
+
+" Sass {{{4
+Plug 'cakebaker/scss-syntax.vim'
+
+" Python {{{4
+Plug 'klen/python-mode', { 'for': 'python' }
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -35,7 +63,8 @@ call plug#end()
 " allows you to create customization files for different file types
 filetype plugin on
 
-let mapleader = ","
+noremap <Space> <Nop>
+let mapleader = " "
 
 syntax on
 colorscheme codedark
@@ -43,16 +72,19 @@ colorscheme codedark
 " For FZF-Vim
 set rtp+=/usr/local/opt/fzf
 
+set shell=zsh
+set hidden
 set autoread
 set relativenumber
 set numberwidth=3
+set list listchars=tab:»·,trail:·  " Display extra whitespace characters
+set expandtab
 
 set spellsuggest=15
 set linebreak
 set scrolloff=3
 set foldcolumn=1
-set laststatus=2
-set statusline=%=\ %{WordCount()}
+
 set updatetime=1000
 
 set ts=2 sts=2 sw=2 et
@@ -62,9 +94,40 @@ set suffixesadd+=.js
 set splitbelow
 set splitright
 
+" COC Vim =====================
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
+" End COC vim ==============================
+
+
+" Ale ================
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['eslint'],
+\}
+let g:ale_fix_on_save = 1
+let g:ale_disable_lsp = 1
+"  END Ale =============
 hi StatusLine ctermbg=234 cterm=NONE
 
-let g:goyo_width = 75 
+let g:goyo_width = 75
 let g:goyo_linenr = 0
 
 noremap j gj
@@ -72,8 +135,8 @@ noremap k gk
 noremap gj j
 noremap gk k
 noremap \ ,
+noremap <Space> <Nop>
 
-map <space> <PageDown>
 " Fix for Ctrl+Space sending NUL
 map <NUL> <PageUp>
 
@@ -91,32 +154,12 @@ map <leader>f :FZF<CR>
 autocmd! User GoyoEnter Limelight0.7
 autocmd! User GoyoLeave Limelight!
 
-let g:word_count="<unknown>"
-augroup WordCounter
-  au!  CursorHold,CursorHoldI * call UpdateWordCount()
-augroup END
-
-function! WordCount()
-  return g:word_count
-endfunction
-
-function! UpdateWordCount()
-  let lnum = 1
-  let n = 0
-  while lnum <= line('$')
-    let n = n + len(split(getline(lnum)))
-    let lnum = lnum + 1
-  endwhile
-  let g:word_count = n
-endfunction
-
-
 nnoremap <Leader>z :LiteDFMToggle<CR>
 nnoremap <Leader>g :Goyo<CR>
 let g:dfm_fg_line = 101
 let g:dfm_bg = 103
-execute 'highlight LineNr ctermfg='        . g:dfm_fg_line 
-execute 'highlight CursorLineNr ctermbg='  . g:dfm_bg 
+execute 'highlight LineNr ctermfg='        . g:dfm_fg_line
+execute 'highlight CursorLineNr ctermbg='  . g:dfm_bg
 
 command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
@@ -126,31 +169,24 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" Easier Buffer navigation
-nmap ; :Buffers<CR>
+map <leader>\ :vsp<CR>
+map <leader><leader>\ :sp<CR>
+map <leader><BS> :q<CR>
 
-" Move between open buffers.
-nmap <C-k> :bnext<CR>
-nmap <C-j> :bprev<CR>
+" Easier Buffer navigation
+map <leader>; :Buffers<CR>
+
+" Move between open buffers. TODD: find new keybindings for this
+nmap <C-]> :bnext<CR>
+nmap <C-[> :bprev<CR>
 
 " Use the space key to toggle folds
-nnoremap <space> za
-vnoremap <space> zf
+nnoremap <leader>, za
+vnoremap <leader>, zf
+
 
 " Marks should go to the column, not just the line. Why isn't this the default?
 nnoremap ' `
-
-" Add diagnostic info for https://github.com/itchyny/lightline.vim
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'cocstatus', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'cocstatus': 'coc#status'
-      \ },
-      \ }
 
 " General: Macro repeater {{{
 
@@ -226,5 +262,32 @@ endfunction
 
 " }}}
 
-let &winwidth = &columns * 7 / 10
+" Auto resize focused verticle split
+" let &winwidth = &columns * 7 / 10
 
+" ================ LINT TEST?
+if has("autocmd")
+  filetype plugin indent on
+
+  autocmd BufReadPost * " {{{2
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it for commit messages, when the position is invalid, or when
+    " inside an event handler (happens when dropping a file on gvim).
+    \ if &ft != 'gitcommit' && line("'\"") > 0 && line("'\"") <= line("$") |
+    \   exe "normal g`\"" |
+    \ endif "}}}2
+
+  " Automatically clean trailing whitespace
+  autocmd BufWritePre * :%s/\s\+$//e
+
+  autocmd BufRead,BufNewFile COMMIT_EDITMSG call pencil#init({'wrap': 'soft'})
+                                        \ | set textwidth=0
+
+  autocmd BufRead,BufNewFile *.md set filetype=markdown
+
+  autocmd BufRead,BufNewFile .eslintrc,.jscsrc,.jshintrc,.babelrc set ft=json
+
+  au BufRead,BufNewFile *.scss set filetype=scss.css
+
+  autocmd BufRead,BufNewFile gitconfig set ft=.gitconfig
+endif
