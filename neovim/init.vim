@@ -172,13 +172,14 @@ nnoremap <C-H> <C-W><C-H>
 map <leader>\ :vsp<CR>
 map <leader><leader>\ :sp<CR>
 map <leader><BS> :q<CR>
+map <leader>w :w<CR>
 
 " Easier Buffer navigation
 map <leader>; :Buffers<CR>
 
 " Move between open buffers. TODD: find new keybindings for this
-nmap <C-]> :bnext<CR>
-nmap <C-[> :bprev<CR>
+" nmap <C-]> :bnext<CR>
+" nmap <C-[> :bprev<CR>
 
 " Use the space key to toggle folds
 nnoremap <leader>, za
