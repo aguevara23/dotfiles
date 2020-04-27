@@ -20,6 +20,15 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'kshenoy/vim-signature'
 
+Plug 'reedes/vim-pencil'
+Plug 'reedes/vim-textobj-sentence'
+Plug 'kana/vim-textobj-user'
+Plug 'vimwiki/vimwiki'
+
+" How do I get these to work?
+Plug 'mattly/iterm-colors-pencil'
+Plug 'reedes/vim-colors-pencil'
+
 " Language Support {{{3
 " JavaScript {{{4
 Plug 'pangloss/vim-javascript'
@@ -61,12 +70,13 @@ endif
 call plug#end()
 
 " allows you to create customization files for different file types
-filetype plugin on
+set nocompatible
+filetype plugin indent on
+syntax on
 
 noremap <Space> <Nop>
 let mapleader = " "
 
-syntax on
 colorscheme codedark
 "
 " For FZF-Vim
@@ -140,7 +150,7 @@ noremap <Space> <Nop>
 " Fix for Ctrl+Space sending NUL
 map <NUL> <PageUp>
 
-map <leader>s :setlocal spell<cr>
+map <leader><leader>s :setlocal spell<cr>
 map <F1> [s
 map <F2> z=
 map <F3> ]s
@@ -169,10 +179,15 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-map <leader>\ :vsp<CR>
-map <leader><leader>\ :sp<CR>
-map <leader><BS> :q<CR>
-map <leader>w :w<CR>
+" map <leader><BS> :q<CR> "what can i do with this?
+map <leader>q :q<CR>
+map <leader>s :w<CR>
+map <leader>tt :vnew term://zsh<CR>
+
+map <leader>th <C-w>t<C-w>H
+map <leader>tk <C-w>t<C-w>K
+map <leader>ts <C-w>R
+" set fillchars+=vert:\ "How do I get this to work?
 
 " Easier Buffer navigation
 map <leader>; :Buffers<CR>
@@ -184,7 +199,6 @@ map <leader>; :Buffers<CR>
 " Use the space key to toggle folds
 nnoremap <leader>, za
 vnoremap <leader>, zf
-
 
 " Marks should go to the column, not just the line. Why isn't this the default?
 nnoremap ' `
@@ -292,3 +306,14 @@ if has("autocmd")
 
   autocmd BufRead,BufNewFile gitconfig set ft=.gitconfig
 endif
+
+"==== PENCIL ===
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+  autocmd FileType text         call pencil#init()
+augroup END
+
+"====== Vim Wiki =========
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
