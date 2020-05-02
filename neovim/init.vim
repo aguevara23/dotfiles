@@ -318,6 +318,16 @@ endfunction
 " Auto resize focused verticle split
 " let &winwidth = &columns * 7 / 10
 
+function! SetupMarkdown()
+  exec ':colorscheme pencil'
+  exec ':set background=light'
+  exec ':set fcs=eob:\ '
+endfunction
+
+function! ClearMarks()
+  exec ':delm! | delm A-Z0-9'
+endfunction
+
 " ================ LINT TEST?
 if has("autocmd")
   filetype plugin indent on
@@ -331,12 +341,13 @@ if has("autocmd")
     \ endif "}}}2
 
   " Automatically clean trailing whitespace
-  " autocmd BufWritePre * :%s/\s\+$//e
+  autocmd BufWritePre * :%s/\s\+$//e
 
   autocmd BufRead,BufNewFile COMMIT_EDITMSG call pencil#init({'wrap': 'soft'})
                                         \ | set textwidth=0
 
   autocmd BufRead,BufNewFile *.md set filetype=markdown
+  autocmd BufRead,BufNewFile *.md call SetupMarkdown()
 
   autocmd BufRead,BufNewFile .eslintrc,.jscsrc,.jshintrc,.babelrc set ft=json
 
