@@ -12,6 +12,9 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'fatih/vim-go'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-fugitive'
+Plug 'vim-scripts/matchit.zip'
+Plug 'tpope/vim-endwise'
+Plug 'mattn/emmet-vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'w0rp/ale'                           " Linter
@@ -25,6 +28,9 @@ Plug 'reedes/vim-textobj-sentence'
 Plug 'kana/vim-textobj-user'
 Plug 'vimwiki/vimwiki'
 
+Plug 'christoomey/vim-tmux-navigator'
+
+
 " How do I get these to work?
 Plug 'mattly/iterm-colors-pencil'
 Plug 'reedes/vim-colors-pencil'
@@ -37,7 +43,8 @@ Plug 'mxw/vim-jsx'
 Plug 'neovim/node-host', { 'do': 'npm install' }
 
 " TypeScript {{{4
-Plug 'HerringtonDarkholme/yats.vim'
+" Plug 'HerringtonDarkholme/yats.vim' "need to figure out how to use this
+Plug 'leafgarland/typescript-vim'
 
 " HTML {{{4
 Plug 'othree/html5.vim'
@@ -50,6 +57,8 @@ Plug 'cakebaker/scss-syntax.vim'
 
 " Python {{{4
 Plug 'klen/python-mode', { 'for': 'python' }
+
+Plug 'ryanoasis/vim-devicons'
 
 "Use 24-bit (true-color) mode in Vim/Neovim when outside tmux.
 "If you're using tmux version 2.2 or later, you can remove the outermost $TMUX check and use tmux's 24-bit color support
@@ -82,6 +91,7 @@ colorscheme codedark
 " For FZF-Vim
 set rtp+=/usr/local/opt/fzf
 
+set encoding=utf8
 set shell=zsh
 set hidden
 set autoread
@@ -103,6 +113,9 @@ set suffixesadd+=.js
 
 set splitbelow
 set splitright
+
+" allows escape to switch modes faster
+set timeoutlen=1000 ttimeoutlen=0
 
 " COC Vim =====================
 
@@ -128,9 +141,14 @@ set signcolumn=yes
 
 
 " Ale ================
+let g:ale_linters = {
+\   'typescript': ['eslint', 'tsserver', 'tslint'],
+\}
+
 let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['eslint'],
+\   'typescript': ['eslint', 'prettier'],
 \}
 let g:ale_fix_on_save = 1
 let g:ale_disable_lsp = 1
@@ -150,6 +168,7 @@ noremap <Space> <Nop>
 " Fix for Ctrl+Space sending NUL
 map <NUL> <PageUp>
 
+" See https://jennifermack.net/2017/02/01/recreating-ulysses-with-vim/
 map <leader><leader>s :setlocal spell<cr>
 map <F1> [s
 map <F2> z=
@@ -166,10 +185,11 @@ autocmd! User GoyoLeave Limelight!
 
 nnoremap <Leader>z :LiteDFMToggle<CR>
 nnoremap <Leader>g :Goyo<CR>
-let g:dfm_fg_line = 101
-let g:dfm_bg = 103
-execute 'highlight LineNr ctermfg='        . g:dfm_fg_line
-execute 'highlight CursorLineNr ctermbg='  . g:dfm_bg
+
+" let g:dfm_fg_line = 101
+" let g:dfm_bg = 103
+" execute 'highlight LineNr ctermfg='        . g:dfm_fg_line
+" execute 'highlight CursorLineNr ctermbg='  . g:dfm_bg
 
 command! WipeReg for i in range(34,122) | silent! call setreg(nr2char(i), []) | endfor
 
@@ -179,7 +199,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" map <leader><BS> :q<CR> "what can i do with this?
 map <leader>q :q<CR>
 map <leader>s :w<CR>
 map <leader>tt :vnew term://zsh<CR>
@@ -199,6 +218,24 @@ map <leader>; :Buffers<CR>
 " Use the space key to toggle folds
 nnoremap <leader>, za
 vnoremap <leader>, zf
+
+" Remap the increment and decrement features of Vim
+nnoremap <A-a> <C-a>
+"what does this do?
+nnoremap å <C-a> "what does this do?
+
+nnoremap <A-x> <C-x>
+"what does this do?
+nnoremap ≈ <C-x
+
+" Tab Shortcuts
+nnoremap tk :tabfirst<CR>
+nnoremap tl :tabnext<CR>
+nnoremap th :tabprev<CR>
+nnoremap tj :tablast<CR>
+nnoremap tn :tabnew<CR>
+nnoremap tc :CtrlSpaceTabLabel<CR>
+nnoremap td :tabclose<CR>
 
 " Marks should go to the column, not just the line. Why isn't this the default?
 nnoremap ' `
@@ -275,6 +312,7 @@ function! QStart()
   return 'q'.s:qreg
 endfunction
 
+
 " }}}
 
 " Auto resize focused verticle split
@@ -293,7 +331,7 @@ if has("autocmd")
     \ endif "}}}2
 
   " Automatically clean trailing whitespace
-  autocmd BufWritePre * :%s/\s\+$//e
+  " autocmd BufWritePre * :%s/\s\+$//e
 
   autocmd BufRead,BufNewFile COMMIT_EDITMSG call pencil#init({'wrap': 'soft'})
                                         \ | set textwidth=0
@@ -307,13 +345,16 @@ if has("autocmd")
   autocmd BufRead,BufNewFile gitconfig set ft=.gitconfig
 endif
 
-"==== PENCIL ===
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd call pencil#init()
-  autocmd FileType text         call pencil#init()
-augroup END
+"==== PENCIL === NOTE: this seems to break markdown functionality?
+" augroup pencil
+"   autocmd!
+"   autocmd FileType markdown,mkd call pencil#init()
+"   autocmd FileType text         call pencil#init()
+" augroup END
 
 "====== Vim Wiki =========
 let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
+
+" Disable automatic comment insertion
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
