@@ -149,6 +149,7 @@ let g:ale_fixers = {
 \   '*': ['remove_trailing_lines', 'trim_whitespace'],
 \   'javascript': ['eslint'],
 \   'typescript': ['eslint', 'prettier'],
+\   'typescriptreact': ['eslint'],
 \}
 let g:ale_fix_on_save = 1
 let g:ale_disable_lsp = 1
@@ -179,12 +180,18 @@ map <F5> zG
 map <C-n> :NERDTreeToggle<CR>
 map <C-f> :FZF<CR>
 map <leader>f :FZF<CR>
+map <leader>r :Rg<CR>
+map <leader>/ :BLines<cr>|
 
 autocmd! User GoyoEnter Limelight0.7
 autocmd! User GoyoLeave Limelight!
 
-nnoremap <Leader>z :LiteDFMToggle<CR>
-nnoremap <Leader>g :Goyo<CR>
+nnoremap <leader>z :LiteDFMToggle<CR>
+nnoremap <leader><leader>g :Goyo<CR>
+
+" Vim Fugitive
+map <leader>gs :Gstatus<CR>
+map <leader>gb :Git blame<CR>
 
 " let g:dfm_fg_line = 101
 " let g:dfm_bg = 103
@@ -369,3 +376,35 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',
 
 " Disable automatic comment insertion
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Advanced ripgrep integration
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
