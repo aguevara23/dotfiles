@@ -181,7 +181,9 @@ map <C-n> :NERDTreeToggle<CR>
 map <C-f> :FZF<CR>
 map <leader>f :FZF<CR>
 map <leader>r :Rg<CR>
+map <leader>m :Marks<CR>
 map <leader>/ :BLines<cr>|
+map <leader>c :Commands<cr>|
 
 autocmd! User GoyoEnter Limelight0.7
 autocmd! User GoyoLeave Limelight!
