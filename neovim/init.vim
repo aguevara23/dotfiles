@@ -15,6 +15,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/matchit.zip'
 Plug 'tpope/vim-endwise'
 Plug 'mattn/emmet-vim'
+Plug 'tpope/vim-abolish'
+Plug 'ap/vim-css-color'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'w0rp/ale'                           " Linter
@@ -211,6 +213,7 @@ nnoremap <C-H> <C-W><C-H>
 map <leader>q :q<CR>
 map <leader>s :w<CR>
 map <leader>tt :vnew term://zsh<CR>
+map <leader>y "*
 
 map <leader>th <C-w>t<C-w>H
 map <leader>tk <C-w>t<C-w>K
@@ -242,9 +245,20 @@ nnoremap tk :tabfirst<CR>
 nnoremap tl :tabnext<CR>
 nnoremap th :tabprev<CR>
 nnoremap tj :tablast<CR>
+nnoremap ts :tab split<CR>
 nnoremap tn :tabnew<CR>
 nnoremap tc :CtrlSpaceTabLabel<CR>
 nnoremap td :tabclose<CR>
+nnoremap m1 1gt
+nnoremap m2 2gt
+nnoremap m3 3gt
+nnoremap m4 4gt
+nnoremap m5 5gt
+nnoremap <leader>1 1gt
+nnoremap <leader>2 2gt
+nnoremap <leader>3 3gt
+nnoremap <leader>4 4gt
+nnoremap <leader>5 5gt
 
 " Marks should go to the column, not just the line. Why isn't this the default?
 nnoremap ' `
