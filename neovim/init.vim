@@ -17,6 +17,7 @@ Plug 'tpope/vim-endwise'
 Plug 'mattn/emmet-vim'
 Plug 'tpope/vim-abolish'
 Plug 'ap/vim-css-color'
+Plug 'vifm/vifm.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'w0rp/ale'                           " Linter
@@ -225,6 +226,9 @@ map <leader>th <C-w>t<C-w>H
 map <leader>tk <C-w>t<C-w>K
 map <leader>ts <C-w>R
 " set fillchars+=vert:\ "How do I get this to work?
+
+" Vifm
+map <leader>vv :Vifm<CR>
 
 " Easier Buffer navigation
 map <leader>; :Buffers<CR>
