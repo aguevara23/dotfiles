@@ -96,6 +96,10 @@ set ts=2 sts=2 sw=2 et
 set suffixesadd+=.js
 set splitbelow
 set splitright
+
+set ignorecase
+set smartcase
+
 " allows escape to switch modes faster
 set timeoutlen=1000 ttimeoutlen=0
 " COC Vim =====================
@@ -150,7 +154,10 @@ map <leader>f :FZF<CR>
 map <leader>r :Rg<CR>
 map <leader>m :Marks<CR>
 map <leader>/ :BLines<cr>|
+map <leader>l :Lines<cr>|
 map <leader>c :Commands<cr>|
+nnoremap <leader>a :Rg <C-R><C-W><CR>
+
 autocmd! User GoyoEnter Limelight0.7
 autocmd! User GoyoLeave Limelight!
 nnoremap <leader>z :LiteDFMToggle<CR>
