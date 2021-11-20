@@ -38,12 +38,12 @@ Plug 'reedes/vim-colors-pencil'
 " Language Support {{{3
 " JavaScript {{{4
 Plug 'pangloss/vim-javascript'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'joukevandermaas/vim-ember-hbs'
-Plug 'mxw/vim-jsx'
 Plug 'neovim/node-host', { 'do': 'npm install' }
 " TypeScript {{{4
-" Plug 'HerringtonDarkholme/yats.vim' "need to figure out how to use this
-Plug 'leafgarland/typescript-vim'
+Plug 'HerringtonDarkholme/yats.vim' "need to figure out how to use this
+" Plug 'leafgarland/typescript-vim'
 " HTML {{{4
 Plug 'othree/html5.vim'
 " CSS {{{4
@@ -373,3 +373,5 @@ command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 " let g:terminal_color_13 = '#ad7fa8'
 " let g:terminal_color_14 = '#00f5e9'
 " let g:terminal_color_15 = '#eeeeec'
+
+au BufRead,BufNewFile *.gohtml set filetype=gohtmltmpl
