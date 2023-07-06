@@ -132,11 +132,11 @@ command Prose call EnableProseMode()
 command UnProse call DisableProseMode()
 command ToggleProse call ToggleProseMode()
 
-function ScratchBufferize()
-	setlocal buftype=nofile
-	setlocal bufhidden=hide
-	setlocal noswapfile
-endfu
+" function Scratch()
+" 	setlocal buftype=nofile
+" 	setlocal bufhidden=hide
+" 	setlocal noswapfile
+" endfu
 
-nnoremap <Leader>d :new \| read ! sdcv <C-R><C-W> <CR>:call ScratchBufferize() <CR>:normal gg<CR>
-nnoremap <Leader>t :new \| read ! moby <C-R><C-W> \| tr , '\n' <CR>:call ScratchBufferize() <CR>:normal gg2dd <CR>
+" nnoremap <Leader>d :new \| read ! sdcv <C-R><C-W> <CR>:call Scratch() <CR>:normal gg<CR>
+" nnoremap <Leader>t :new \| read ! moby <C-R><C-W> \| tr , '\n' <CR>:call Scratch() <CR>:normal gg2dd <CR>
