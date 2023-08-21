@@ -31,6 +31,9 @@ if [ "$CODESPACES" == "true" ]; then
         brew install fd
     fi
 
+    ln -s $(pwd)/.tmux.conf $HOME/.tmux.conf
+    ln -s "$(pwd)/nvim" "$HOME/.config/nvim"
+
 else
     echo "Not running in codespaces"
 fi
