@@ -24,6 +24,7 @@ return require('packer').startup(function(use)
   use 'tpope/vim-rhubarb'
   use 'tpope/vim-surround'
   use 'tpope/vim-commentary'
+  use 'ojroques/vim-oscyank'
   use {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
